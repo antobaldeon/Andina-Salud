@@ -1,31 +1,34 @@
-This is a Kotlin Multiplatform project targeting Android, iOS.
+# AndinaSalud
 
-* [/iosApp](./iosApp/iosApp) contains an iOS application. Even if you’re sharing your UI with Compose Multiplatform,
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+Aplicación multiplataforma para que un paciente consulte, solicite y cancele citas de una red de centros médicos. La Unidad 1 utiliza exclusivamente datos simulados en memoria; no conecta con API ni base de datos.
 
-* [/shared](./shared/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./shared/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./shared/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./shared/src/jvmMain/kotlin)
-    folder is the appropriate location.
+## Plataformas
 
-### Running the apps
+- Android: `./gradlew :androidApp:assembleDebug`
+- iOS: abrir `iosApp/iosApp.xcodeproj` en Xcode y ejecutar el esquema `iosApp` en simulador o dispositivo.
 
-Use the run configurations provided by the run widget in your IDE's toolbar. You can also use these commands and options:
+El módulo `shared` contiene la interfaz Compose Multiplatform, el dominio y los repositorios simulados. Koin se inicia en Android desde `MainApplication` y en iOS desde `MainViewController`.
 
-- Android app: `./gradlew :androidApp:assembleDebug`
-- iOS app: open the [/iosApp](./iosApp) directory in Xcode and run it from there.
+## Estructura
 
-### Running tests
+- `domain/model`: paciente, citas, catálogo y estados de cita.
+- `domain/repository`: contratos que permiten sustituir los repositorios sin cambiar la UI ni los casos de uso.
+- `domain/usecase` y `domain/policy`: validación de solicitudes, consulta de citas y cancelación.
+- `data/local`: catálogo y citas semilla en memoria, además del retardo/error simulado.
+- `data/repository`: implementaciones fake de los contratos del dominio.
+- `presentation`: pantallas, ViewModels, estados de UI, componentes y navegación.
+- `di`: módulos Koin compartidos y módulos de plataforma.
 
-Use the run button in your IDE's editor gutter, or run tests using Gradle tasks:
+## Funciones del caso
 
-- Android tests: `./gradlew :shared:testAndroidHostTest`
-- iOS tests: `./gradlew :shared:iosSimulatorArm64Test`
+Inicio con próxima cita; lista ordenada con filtros por estado y búsqueda sin distinguir mayúsculas ni tildes; detalle con indicaciones y cancelación confirmada; formulario de solicitud con validación de fecha, hora, motivo, cupo y horario duplicado; perfil y tema claro/oscuro.
 
----
+Las reglas de negocio están en `domain`. El formulario puede crear citas durante la sesión, pero los datos se reinician al cerrar la aplicación.
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+## Arquitectura
+
+La UI observa `StateFlow` expuestos por ViewModels. Los ViewModels llaman casos de uso, que dependen de interfaces de repositorio en `domain`. Las implementaciones actuales están en `data` y simulan asincronía con corrutinas. Para sustituirlas por otra fuente de datos se implementan esos contratos y se actualiza el registro de Koin.
+
+## Colaboración y entrega del examen
+
+Usar `develop` como rama de integración y una rama `feature/<funcionalidad>-<apellido>` por integrante. Integrar los cambios mediante solicitudes revisadas; mantener `main` estable. Para el bloque individual del examen, cada integrante crea su rama `sc-<letra>-<apellido>` y registra al menos tres commits propios. Etiquetar el commit evaluado como `v1.0-unidad1` y adjuntar las capturas Android/iOS, el gráfico de ramas y el resumen de contribuciones.

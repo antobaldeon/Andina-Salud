@@ -4,6 +4,13 @@ import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.dsl.module
+import org.koin.core.module.dsl.viewModelOf
+import pe.edu.upeu.andinasaludbaldeon.presentation.inicio.InicioViewModel
+import pe.edu.upeu.andinasaludbaldeon.presentation.citas.CitasViewModel
+import pe.edu.upeu.andinasaludbaldeon.presentation.detalle.DetalleCitaViewModel
+import pe.edu.upeu.andinasaludbaldeon.presentation.solicitud.SolicitudViewModel
+import pe.edu.upeu.andinasaludbaldeon.presentation.perfil.PerfilViewModel
+import pe.edu.upeu.andinasaludbaldeon.presentation.ajustes.AjustesViewModel
 import pe.edu.upeu.andinasaludbaldeon.data.local.CitasSimuladas
 import pe.edu.upeu.andinasaludbaldeon.data.local.SimuladorCarga
 import pe.edu.upeu.andinasaludbaldeon.data.repository.*
@@ -33,7 +40,12 @@ val domainModule = module {
 }
 
 val presentationModule = module {
-    // Registrar aqui los ViewModel cuando tengan implementacion.
+    viewModelOf(::InicioViewModel)
+    viewModelOf(::CitasViewModel)
+    viewModelOf(::DetalleCitaViewModel)
+    viewModelOf(::SolicitudViewModel)
+    viewModelOf(::PerfilViewModel)
+    viewModelOf(::AjustesViewModel)
 }
 
 expect val platformModule: Module
