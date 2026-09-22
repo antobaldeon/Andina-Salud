@@ -17,8 +17,8 @@ import kotlin.test.*
 import kotlin.time.Instant
 
 class CitasDominioTest {
-    private val paciente = Paciente("P1", "Lucia", "70154823", "lucia@correo.pe", "999111222")
-    private val sede = Sede("S1", "Nana")
+    private val paciente = Paciente("P1", "Antonella", "70154823", "lucia@correo.pe", "999111222")
+    private val sede = Sede("S1", "ÑaÑa")
     private val especialidad = Especialidad("E1", "Medicina General")
     private val medico = Medico("M1", "Ivan Rojas", especialidad, listOf(sede))
     private val reloj = object : Reloj {
