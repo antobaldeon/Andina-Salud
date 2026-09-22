@@ -10,5 +10,6 @@ data class SolicitudCita(
     val sedeId: String,
     val fecha: LocalDate,
     val hora: LocalTime,
-    val motivo: String
+    val motivo: String,
+    val modalidad: ModalidadAtencion = ModalidadAtencion.PRESENCIAL
 )

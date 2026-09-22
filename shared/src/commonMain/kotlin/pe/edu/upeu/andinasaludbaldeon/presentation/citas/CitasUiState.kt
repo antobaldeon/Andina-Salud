@@ -10,5 +10,7 @@ sealed interface FaseCitas {
 data class CitasUiState(
     val fase: FaseCitas = FaseCitas.Cargando,
     val busqueda: String = "",
-    val filtro: FiltroEstadoCita = FiltroEstadoCita.PROGRAMADA
+    val filtro: FiltroEstadoCita = FiltroEstadoCita.PROGRAMADA,
+    val soloHoy: Boolean = false,
+    val citasProgramadas: Int = 0
 )

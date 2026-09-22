@@ -8,10 +8,12 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.runtime.Composable
 
 @Composable
-fun BarraNavegacion(destino: String, navegar: (String) -> Unit) {
+fun BarraNavegacion(destino: String, citasProgramadas: Int, navegar: (String) -> Unit) {
     NavigationBar {
         listOf(
             Triple(Destinos.INICIO, "Inicio", Icons.Filled.Home),
@@ -21,7 +23,11 @@ fun BarraNavegacion(destino: String, navegar: (String) -> Unit) {
             NavigationBarItem(
                 selected = destino == ruta,
                 onClick = { if (destino != ruta) navegar(ruta) },
-                icon = { Icon(icono, contentDescription = etiqueta) },
+                icon = {
+                    if (ruta == Destinos.CITAS && citasProgramadas > 0) {
+                        BadgedBox(badge = { Badge { Text(citasProgramadas.toString()) } }) { Icon(icono, contentDescription = etiqueta) }
+                    } else Icon(icono, contentDescription = etiqueta)
+                },
                 label = { Text(etiqueta) }
             )
         }

@@ -9,6 +9,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock
 import pe.edu.upeu.andinasaludbaldeon.domain.usecase.ObtenerCitasUseCase
 import pe.edu.upeu.andinasaludbaldeon.domain.usecase.ObtenerPacienteUseCase
 
@@ -40,7 +43,7 @@ class CitasViewModel(
             citas.fold(
                 onSuccess = { resultado ->
                     todasLasCitas = resultado.map { it.aUi() }
-                    _uiState.update { it.copy(fase = filtrar(it)) }
+                    _uiState.update { it.copy(citasProgramadas = todasLasCitas.count { cita -> cita.estado == FiltroEstadoCita.PROGRAMADA }, fase = filtrar(it)) }
                 },
                 onFailure = { mostrarError() }
             )
@@ -57,6 +60,8 @@ class CitasViewModel(
         actualizarFiltros { it.copy(filtro = filtro) }
     }
 
+    fun onSoloHoyChange(valor: Boolean) { actualizarFiltros { it.copy(soloHoy = valor) } }
+
     private fun actualizarFiltros(cambio: (CitasUiState) -> CitasUiState) {
         _uiState.update {
             val nuevo = cambio(it)
@@ -69,8 +74,10 @@ class CitasViewModel(
 
     private fun filtrar(estado: CitasUiState): FaseCitas {
         val consulta = estado.busqueda.normalizarBusqueda()
+        val hoy = Clock.System.now().toLocalDateTime(TimeZone.of("America/Lima")).date
         val coincidencias = todasLasCitas.filter {
             it.estado == estado.filtro &&
+                (!estado.soloHoy || it.fechaValor == hoy) &&
                 (consulta in it.especialidad.normalizarBusqueda() || consulta in it.medico.normalizarBusqueda())
         }
         return if (coincidencias.isNotEmpty()) FaseCitas.Contenido(coincidencias)

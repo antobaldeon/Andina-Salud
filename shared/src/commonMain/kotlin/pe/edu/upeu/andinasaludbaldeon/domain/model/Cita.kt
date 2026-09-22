@@ -11,7 +11,9 @@ data class Cita(
     val fecha: LocalDate,
     val hora: LocalTime,
     val motivo: String,
-    val estado: EstadoCita
+    val estado: EstadoCita,
+    val modalidad: ModalidadAtencion = ModalidadAtencion.PRESENCIAL,
+    val historialCambios: List<String> = emptyList()
 ) {
     // La especialidad se obtiene del medico para evitar datos contradictorios.
     val especialidad: Especialidad get() = medico.especialidad

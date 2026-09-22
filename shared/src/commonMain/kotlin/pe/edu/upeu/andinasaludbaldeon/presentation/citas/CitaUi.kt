@@ -2,6 +2,8 @@ package pe.edu.upeu.andinasaludbaldeon.presentation.citas
 
 import pe.edu.upeu.andinasaludbaldeon.domain.model.Cita
 import pe.edu.upeu.andinasaludbaldeon.domain.model.EstadoCita
+import pe.edu.upeu.andinasaludbaldeon.domain.model.ModalidadAtencion
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.number
 
 enum class FiltroEstadoCita(val etiqueta: String) {
@@ -16,8 +18,10 @@ data class CitaUi(
     val medico: String,
     val sede: String,
     val fecha: String,
+    val fechaValor: LocalDate,
     val hora: String,
-    val estado: FiltroEstadoCita
+    val estado: FiltroEstadoCita,
+    val modalidad: ModalidadAtencion
 )
 
 internal fun Cita.aUi() = CitaUi(
@@ -26,12 +30,14 @@ internal fun Cita.aUi() = CitaUi(
     medico = medico.nombre,
     sede = sede.nombre,
     fecha = "${fecha.day.toString().padStart(2, '0')}/${fecha.month.number.toString().padStart(2, '0')}/${fecha.year}",
+    fechaValor = fecha,
     hora = "${hora.hour.toString().padStart(2, '0')}:${hora.minute.toString().padStart(2, '0')}",
     estado = when (estado) {
         is EstadoCita.Programada -> FiltroEstadoCita.PROGRAMADA
         is EstadoCita.Atendida -> FiltroEstadoCita.ATENDIDA
         is EstadoCita.Cancelada -> FiltroEstadoCita.CANCELADA
-    }
+    },
+    modalidad = modalidad
 )
 
 // Incluye vocales acentuadas precompuestas y marcas combinadas, sin APIs de Java.

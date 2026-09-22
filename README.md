@@ -21,7 +21,7 @@ El módulo `shared` contiene la interfaz Compose Multiplatform, el dominio y los
 
 ## Funciones del caso
 
-Inicio con próxima cita; lista ordenada con filtros por estado y búsqueda sin distinguir mayúsculas ni tildes; detalle con indicaciones y cancelación confirmada; formulario de solicitud con validación de fecha, hora, motivo, cupo y horario duplicado; perfil y tema claro/oscuro.
+Inicio con próxima cita; lista ordenada con filtros por estado, filtro Hoy y búsqueda sin distinguir mayúsculas ni tildes; contador y límite visible de tres citas Programadas; detalle con indicaciones, modalidad de atención, historial de cambios, reprogramación y cancelación confirmada; formulario con elección Presencial o Teleconsulta y validación de fecha, hora, motivo, cupo y horario duplicado; perfil y tema claro/oscuro.
 
 Las reglas de negocio están en `domain`. El formulario puede crear citas durante la sesión, pero los datos se reinician al cerrar la aplicación.
 

@@ -20,3 +20,6 @@ class CitaNoEncontradaException : NoSuchElementException("No se encontro la cita
 
 class CancelacionNoPermitidaException :
     IllegalStateException("Solo se puede cancelar una cita Programada a mas de 24 horas.")
+
+class ReprogramacionNoPermitidaException :
+    IllegalStateException("Solo se puede reprogramar una cita Programada.")

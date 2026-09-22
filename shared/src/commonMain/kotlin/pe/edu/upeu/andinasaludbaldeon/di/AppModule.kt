@@ -5,6 +5,7 @@ import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.dsl.module
 import org.koin.core.module.dsl.viewModelOf
+import org.koin.core.module.dsl.viewModel
 import pe.edu.upeu.andinasaludbaldeon.presentation.inicio.InicioViewModel
 import pe.edu.upeu.andinasaludbaldeon.presentation.citas.CitasViewModel
 import pe.edu.upeu.andinasaludbaldeon.presentation.detalle.DetalleCitaViewModel
@@ -37,12 +38,13 @@ val domainModule = module {
     factory { ObtenerCatalogoUseCase(get()) }
     factory { SolicitarCitaUseCase(get(), get(), get(), get()) }
     factory { CancelarCitaUseCase(get(), get()) }
+    factory { ReprogramarCitaUseCase(get(), get()) }
 }
 
 val presentationModule = module {
     viewModelOf(::InicioViewModel)
     viewModelOf(::CitasViewModel)
-    viewModelOf(::DetalleCitaViewModel)
+    viewModel { DetalleCitaViewModel(get(), get(), get(), get()) }
     viewModelOf(::SolicitudViewModel)
     viewModelOf(::PerfilViewModel)
     viewModelOf(::AjustesViewModel)

@@ -12,6 +12,7 @@ import kotlinx.datetime.LocalTime
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import pe.edu.upeu.andinasaludbaldeon.domain.model.SolicitudCita
+import pe.edu.upeu.andinasaludbaldeon.domain.model.ModalidadAtencion
 import pe.edu.upeu.andinasaludbaldeon.domain.time.Reloj
 import pe.edu.upeu.andinasaludbaldeon.domain.usecase.*
 
@@ -46,6 +47,7 @@ class SolicitudViewModel(
     fun cambiarFecha(v: String) = _uiState.update { it.copy(fecha = v, errores = it.errores.copy(fecha = null)) }
     fun cambiarHora(v: String) = _uiState.update { it.copy(hora = v, errores = it.errores.copy(hora = null)) }
     fun cambiarMotivo(v: String) = _uiState.update { it.copy(motivo = v.take(200), errores = it.errores.copy(motivo = null)) }
+    fun cambiarModalidad(v: ModalidadAtencion) = _uiState.update { it.copy(modalidad = v) }
 
     fun enviar() {
         val s = _uiState.value
@@ -65,7 +67,7 @@ class SolicitudViewModel(
                 )) }
                 return@launch
             }
-            val request = SolicitudCita(pacienteResultado.getOrThrow().id, s.especialidadId, s.sedeId, fecha, hora, s.motivo)
+            val request = SolicitudCita(pacienteResultado.getOrThrow().id, s.especialidadId, s.sedeId, fecha, hora, s.motivo, s.modalidad)
             val errores = validar(request, emptyList()).copy(
                 general = if (s.especialidadId.isBlank()) "Selecciona una especialidad." else null
             )

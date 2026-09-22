@@ -12,10 +12,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import pe.edu.upeu.andinasaludbaldeon.presentation.ajustes.AjustesScreen
 import pe.edu.upeu.andinasaludbaldeon.presentation.citas.CitasScreen
+import pe.edu.upeu.andinasaludbaldeon.presentation.citas.CitasViewModel
+import pe.edu.upeu.andinasaludbaldeon.presentation.citas.FaseCitas
+import org.koin.compose.viewmodel.koinViewModel
 import pe.edu.upeu.andinasaludbaldeon.presentation.detalle.DetalleCitaScreen
 import pe.edu.upeu.andinasaludbaldeon.presentation.inicio.InicioScreen
 import pe.edu.upeu.andinasaludbaldeon.presentation.perfil.PerfilScreen
@@ -24,6 +28,8 @@ import pe.edu.upeu.andinasaludbaldeon.presentation.solicitud.SolicitudScreen
 @Composable
 fun AppNavHost(modoOscuro: Boolean, onModoOscuroChange: (Boolean) -> Unit) {
     val nav = rememberNavController()
+    val citasViewModel: CitasViewModel = koinViewModel()
+    val citasState by citasViewModel.uiState.collectAsState()
     var citaSeleccionada by remember { mutableStateOf(0L) }
     val backStack by nav.currentBackStackEntryAsState()
     val route = backStack?.destination?.route
@@ -39,7 +45,7 @@ fun AppNavHost(modoOscuro: Boolean, onModoOscuroChange: (Boolean) -> Unit) {
     val mostrarBarra = route in setOf(Destinos.INICIO, Destinos.CITAS, Destinos.PERFIL)
 
     Scaffold(bottomBar = {
-        if (mostrarBarra) BarraNavegacion(mainRoute) { destino ->
+        if (mostrarBarra) BarraNavegacion(mainRoute, citasState.citasProgramadas) { destino ->
             nav.navigate(destino) {
                 popUpTo(Destinos.INICIO) { saveState = true }
                 launchSingleTop = true
@@ -51,6 +57,7 @@ fun AppNavHost(modoOscuro: Boolean, onModoOscuroChange: (Boolean) -> Unit) {
             composable(Destinos.INICIO) {
                 InicioScreen(
                     refreshKey = refreshKey,
+                    solicitarHabilitada = (citasState.fase is FaseCitas.Contenido || citasState.fase is FaseCitas.Vacio) && citasState.citasProgramadas < 3,
                     irACitas = { nav.navigate(Destinos.CITAS) },
                     irASolicitud = { nav.navigate(Destinos.SOLICITUD) },
                     abrirDetalle = { citaSeleccionada = it; nav.navigate(Destinos.DETALLE) }
@@ -59,6 +66,7 @@ fun AppNavHost(modoOscuro: Boolean, onModoOscuroChange: (Boolean) -> Unit) {
             composable(Destinos.CITAS) {
                 CitasScreen(
                     refreshKey = refreshKey,
+                    viewModel = citasViewModel,
                     abrirDetalle = { citaSeleccionada = it; nav.navigate(Destinos.DETALLE) },
                     irASolicitud = { nav.navigate(Destinos.SOLICITUD) }
                 )

@@ -37,7 +37,8 @@ class SolicitarCitaUseCase(
                     fecha = solicitud.fecha,
                     hora = solicitud.hora,
                     motivo = solicitud.motivo.trim(),
-                    estado = EstadoCita.Programada(recordatorioActivo = false)
+                    estado = EstadoCita.Programada(recordatorioActivo = false),
+                    modalidad = solicitud.modalidad
                 )
             )
         }

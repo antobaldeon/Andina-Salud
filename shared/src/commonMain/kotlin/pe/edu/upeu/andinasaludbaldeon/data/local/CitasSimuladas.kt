@@ -11,9 +11,9 @@ import pe.edu.upeu.andinasaludbaldeon.domain.time.Reloj
 class CitasSimuladas(reloj: Reloj) {
     val paciente = Paciente(
         id = "P-0417",
-        nombre = "Lucía Quispe Mamani",
-        documento = "70154823",
-        correo = "lucia.quispe@correo.pe",
+        nombre = "Antonella Baldeon Ramirez",
+        documento = "71179838",
+        correo = "anto.baldeon@gmail.com",
         telefono = "987654321"
     )
     val sedes = listOf(
@@ -44,19 +44,21 @@ class CitasSimuladas(reloj: Reloj) {
 
     val citas = listOf(
         crearCita(1, 0, 0, 2, "09:00", EstadoCita.Programada(true)),
-        crearCita(2, 2, 1, 4, "16:30", EstadoCita.Programada(false)),
+        crearCita(2, 2, 1, 4, "16:30", EstadoCita.Programada(false), ModalidadAtencion.TELECONSULTA),
         crearCita(3, 6, 3, 7, "11:15", EstadoCita.Programada(true)),
         crearCita(4, 4, 2, -20, "08:45", EstadoCita.Atendida("Control en tres meses")),
-        crearCita(5, 8, 0, -10, "15:00", EstadoCita.Atendida("Continuar sesiones quincenales")),
+        crearCita(5, 8, 0, -10, "15:00", EstadoCita.Atendida("Continuar sesiones quincenales"), ModalidadAtencion.TELECONSULTA),
         crearCita(6, 0, 1, -5, "10:30", EstadoCita.Cancelada("Viaje del paciente", true))
     )
 
     private fun crearCita(
-        id: Long, medico: Int, sede: Int, dias: Int, hora: String, estado: EstadoCita
+        id: Long, medico: Int, sede: Int, dias: Int, hora: String, estado: EstadoCita,
+        modalidad: ModalidadAtencion = ModalidadAtencion.PRESENCIAL
     ) = Cita(
         id = id, paciente = paciente, medico = medicos[medico], sede = sedes[sede],
         fecha = hoy.plus(dias, DateTimeUnit.DAY), hora = LocalTime.parse(hora),
         motivo = "Consulta de ${medicos[medico].especialidad.nombre.lowercase()}",
-        estado = estado
+        estado = estado,
+        modalidad = modalidad
     )
 }

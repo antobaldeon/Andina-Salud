@@ -9,6 +9,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -20,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
+import pe.edu.upeu.andinasaludbaldeon.domain.model.ModalidadAtencion
 
 @Composable
 fun SolicitudScreen(volver: () -> Unit, irACitas: () -> Unit, viewModel: SolicitudViewModel = koinViewModel()) {
@@ -30,6 +32,12 @@ fun SolicitudScreen(volver: () -> Unit, irACitas: () -> Unit, viewModel: Solicit
         else {
             Selector("Especialidad", s.especialidades.map { it.id to it.nombre }, s.especialidadId, viewModel::elegirEspecialidad, s.errores.especialidad)
             Selector("Sede", s.sedes.map { it.id to it.nombre }, s.sedeId, viewModel::elegirSede, s.errores.sede)
+            Text("Modalidad de atención", style = MaterialTheme.typography.labelLarge)
+            androidx.compose.foundation.layout.Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                ModalidadAtencion.entries.forEach { modalidad ->
+                    FilterChip(selected = s.modalidad == modalidad, onClick = { viewModel.cambiarModalidad(modalidad) }, label = { Text(modalidad.etiqueta) })
+                }
+            }
             OutlinedTextField(s.fecha, viewModel::cambiarFecha, label = { Text("Fecha (AAAA-MM-DD)") }, singleLine = true, modifier = Modifier.fillMaxWidth(), isError = s.errores.fecha != null, supportingText = { s.errores.fecha?.let { Text(it) } })
             OutlinedTextField(s.hora, viewModel::cambiarHora, label = { Text("Hora (HH:MM)") }, singleLine = true, modifier = Modifier.fillMaxWidth(), isError = s.errores.hora != null, supportingText = { s.errores.hora?.let { Text(it) } })
             OutlinedTextField(s.motivo, viewModel::cambiarMotivo, label = { Text("Motivo de consulta") }, minLines = 3, maxLines = 5, modifier = Modifier.fillMaxWidth(), isError = s.errores.motivo != null, supportingText = { Text(s.errores.motivo ?: "Entre 10 y 200 caracteres · ${s.motivo.length}/200") })

@@ -26,6 +26,7 @@ import pe.edu.upeu.andinasaludbaldeon.presentation.components.EstadoError
 @Composable
 fun InicioScreen(
     refreshKey: Int,
+    solicitarHabilitada: Boolean,
     irACitas: () -> Unit,
     irASolicitud: () -> Unit,
     abrirDetalle: (Long) -> Unit,
@@ -60,6 +61,8 @@ fun InicioScreen(
             }
         }
         Button(onClick = irACitas, modifier = Modifier.fillMaxWidth(), contentPadding = PaddingValues(16.dp)) { Text("Mis citas") }
-        OutlinedButton(onClick = irASolicitud, modifier = Modifier.fillMaxWidth(), contentPadding = PaddingValues(16.dp)) { Text("Solicitar cita") }
+        OutlinedButton(onClick = irASolicitud, enabled = solicitarHabilitada, modifier = Modifier.fillMaxWidth(), contentPadding = PaddingValues(16.dp)) {
+            Text(if (solicitarHabilitada) "Solicitar cita" else "Límite de 3 citas alcanzado")
+        }
     }
 }
